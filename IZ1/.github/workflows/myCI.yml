@@ -1,0 +1,47 @@
+name: 'All tests'
+on: [pull_request, push]
+
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install valgrind
+      run: sudo apt-get install -y valgrind
+    - name: Install googletest
+      run: sudo apt-get install -y googletest
+    - name: More install for googletest
+      run: sudo apt-get install libgtest-dev
+    - name: Install gcovr
+      run: sudo apt install gcovr
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck -y
+    - name: Make
+      run: mkdir build && cd build && cmake .. && make
+    - name: Run cppcheck
+      run: cppcheck --enable=all --suppress=missingIncludeSystem --language=c *.c
+    - name: Run Valgrind
+      run: cd build && valgrind --error-exitcode=1 ./test_country
+    - name: Tests
+      run: |
+          cd build
+          ./test_country
+          cd ..
+          gcovr -r . --exclude build/ --exclude main.c --html --html-details -o my_coverage.html
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: my_coverage.html
+    - name: Run clang-format style check
+      uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: '.'
+        exclude: './build ./github ./vscode ./CMakeModules ./idea'
+        extensions: 'h,cpp,c'
+        clangFormatVersion: 12
+        style: google
