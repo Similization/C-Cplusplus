@@ -12,30 +12,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int opt, err = 0;
-    char* opts = "-:i:";
+    int opt, err = 1;
+    char* opts = "-:i:c:";
 
     while ((opt = getopt(argc, argv, opts)) != -1) {
         switch (opt)
         {
         case 'i': 
             err = initialize_array(optarg, array, MAX_ARRAY_SIZE);
-            if (err != 0) {
-                return 1;
-            }
             break;
-        /*case 'c':
-            err = create_file(optarg);
-            if (err) {
-                return 1;
-            }
-            break;*/
-        /*case 'u':
-            err = initialize_array("lib/text_file/rand_values.txt", array, MAX_ARRAY_SIZE);
-            if (err) {
-                return 1;
-            }
-            break;*/
+        case 'c':
+            err = create_and_init(optarg, MAX_ARRAY_SIZE);
+            return 0;
+            break;
         case '?':
             printf("Unknown option: %c\n", optopt);
             break;
@@ -48,10 +37,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    if (err) {
+        free(array);
+        return 1;
+    }
+
     /* time start */
-
+    unsigned int start_time = clock();
     formula_data res = get_formula_datas(array, MAX_ARRAY_SIZE);
-
+    unsigned int end_time = clock();
     /* time end */
 
     long long n = MAX_ARRAY_SIZE / 2;
@@ -67,6 +61,7 @@ int main(int argc, char* argv[]) {
     printf("The equation of the form: y = a*x + b\n");
     printf("Will be: y = %LF*x + %LF\n", coeff_a, coeff_b);
     printf("Where: a = %LF,  b = %LF\n", coeff_a, coeff_b);
+    printf("Runtime: %u\n", end_time - start_time);
 
     return 0;
 }

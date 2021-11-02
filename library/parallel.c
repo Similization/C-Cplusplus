@@ -73,6 +73,7 @@ formula_data get_formula_datas(double* array, long long a_size) {
     }
 
     size_t threads_max_count = sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
+    //printf("Treads count: %lu\n", threads_max_count);
     pthread_t threads[threads_max_count];                     /* array of threads */
     thread_info f_datas[threads_max_count];                   /* array of threads information */
 

@@ -13,9 +13,9 @@ message(STATUS "Compile with static library? ${USE_STATIC}")
 
 add_executable(main main.c)
 
-add_library(_file STATIC lib/file/file.c)
+add_library(_file STATIC file_lib/file.c)
 target_include_directories(_file PUBLIC
-${PROJECT_SOURCE_DIR}/lib/file/)
+${PROJECT_SOURCE_DIR}/file_lib/)
 
 target_link_libraries(main _file)
 
@@ -30,8 +30,7 @@ else()
 
 endif()
 
-add_executable(cd create_double.c)
-
+#add_executable(cd create_double.c)
 # gtest
 include(FetchContent)
 FetchContent_Declare(
@@ -45,14 +44,17 @@ enable_testing()
 
 
 if(USE_STATIC)
-    add_executable(lib_test tests/main_test.cpp tests/consist_tests.cpp)
+    add_executable(lib_test tests/file_tests.cpp tests/main_test.cpp tests/consist_tests.cpp)
     target_include_directories(lib_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library)
     target_link_libraries(lib_test gtest_main _consist)
 else()
-    add_executable(lib_test tests/main_test.cpp tests/parallel_tests.cpp)
+    add_executable(lib_test tests/file_tests.cpp tests/main_test.cpp tests/parallel_tests.cpp)
     target_include_directories(lib_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library)
     target_link_libraries(lib_test gtest_main _parallel)
 endif()
+
+target_include_directories(lib_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/file_lib)
+target_link_libraries(lib_test _file)
 
 include(GoogleTest)
 gtest_discover_tests(lib_test)
