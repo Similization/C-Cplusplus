@@ -1,0 +1,5 @@
+.vscode/
+build/
+create_double.c
+lib/
+file.txt
