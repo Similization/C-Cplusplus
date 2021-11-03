@@ -23,6 +23,9 @@ jobs:
     - name: Install cppcheck
       run: sudo apt-get install cppcheck -y
 
+    - name: Make coverage directory
+      run: mkdir coverage  
+
     - name: Make consist
       run: mkdir build_c && cd build_c && cmake .. && make
 
@@ -37,7 +40,7 @@ jobs:
           cd build_c
           ./lib_test
           cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o coverage_consist.html
+          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o coverage/coverage_consist.html
 
     - name: Make parallel
       run: mkdir build_p && cd build_p && cmake .. -DUSE_STATIC=OFF && make
@@ -53,13 +56,13 @@ jobs:
           cd build_p
           ./lib_test
           cd ..
-          gcovr -r . --exclude build_p/ --exclude main.c --html --html-details -o coverage_parallel.html
+          gcovr -r . --exclude build_p/ --exclude main.c --html --html-details -o coverage/coverage_parallel.html
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage-report
-        path: coverage_consist.html
+        path: coverage/
 
     - name: Run clang-format style check
       uses: DoozyX/clang-format-lint-action@v0.12
