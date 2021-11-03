@@ -2,4 +2,4 @@
 build/
 create_double.c
 file.txt
-git
+.clang-format
