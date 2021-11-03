@@ -44,6 +44,10 @@ int main(int argc, char* argv[]) {
   /* time start */
   unsigned int start_time = clock();
   formula_data res = get_formula_datas(array, MAX_ARRAY_SIZE);
+  if (res.sum_x == res.sum_y == res.sum_xy == res.sum_x2 == 0) {
+      printf("Wrong data\n");
+      return 1;
+  }
   unsigned int end_time = clock();
   /* time end */
 
