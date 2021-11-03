@@ -56,7 +56,7 @@ jobs:
           cd build_p
           ./lib_test
           cd ..
-          gcovr -r . --exclude build_p/ --exclude main.c --html --html-details -o coverage/coverage_parallel.html
+          gcovr -r . --exclude build_c/ --exclude build_p/ --exclude main.c --html --html-details -o coverage/coverage_parallel.html
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
