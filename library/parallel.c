@@ -1,3 +1,6 @@
+#include <pthread.h>
+#include <unistd.h>
+
 #include "interface.h"
 
 pthread_mutex_t mutex;
@@ -8,16 +11,6 @@ typedef struct thread_info {
   size_t thread_num;  /* number of current thread */
   formula_data* data; /* point to formula's datas */
 } thread_info;
-
-int fdata_initialize(formula_data* data) {
-  if (!data) {
-    printf("Data error: data is empty\n");
-    return 1;
-  }
-  data->sum_xy = data->sum_y = 0;
-  data->sum_x2 = data->sum_x = 0;
-  return 0;
-}
 
 void* sum_formula_datas(void* args) {
   if (!args) {

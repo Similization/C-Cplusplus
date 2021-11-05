@@ -23,46 +23,52 @@ jobs:
     - name: Install cppcheck
       run: sudo apt-get install cppcheck -y
 
-    - name: Make coverage directory
-      run: mkdir coverage  
+    - name: Make result directory
+      run: mkdir -p result/coverage 
+
+    - name: Run cppcheck
+      run: cppcheck --enable=all --suppress=missingIncludeSystem --language=c *.c
 
     - name: Make consist
       run: mkdir build_c && cd build_c && cmake .. && make
 
-    - name: Run cppcheck
-      run: cppcheck --enable=all --suppress=missingIncludeSystem --language=c *.c
+    - name: Run consist
+      run: cd result && touch consist_results.txt && cd .. && cd build_c ./main > ../result/consist_results.txt
 
     - name: Run Valgrind
-      run: cd build_c && valgrind --error-exitcode=1 ./lib_test
+      run: cd build_c && valgrind --error-exitcode=1 ./consist_test
 
     - name: Tests
       run: |
           cd build_c
-          ./lib_test
+          ./consist_test
           cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o coverage/coverage_consist.html
+          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_consist.html
+          
+          cd build_c
+          ./parallel_test
+          cd ..
+          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_parallel.html
+          
+          cd build_c
+          ./file_lib_test
+          cd ..
+          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_file.html
 
     - name: Make parallel
       run: mkdir build_p && cd build_p && cmake .. -DUSE_STATIC=OFF && make
 
-    - name: Run cppcheck
-      run: cppcheck --enable=all --suppress=missingIncludeSystem --language=c *.c
+    - name: Run consist
+      run: cd result && touch parallel_results.txt && cd .. && cd build_c ./main > ../result/parallel_results.txt
 
     - name: Run Valgrind
       run: cd build_p && valgrind --error-exitcode=1 ./lib_test
 
-    - name: Tests
-      run: |
-          cd build_p
-          ./lib_test
-          cd ..
-          gcovr -r . --exclude build_c/ --exclude build_p/ --exclude main.c --html --html-details -o coverage/coverage_parallel.html
-
-    - name: Archive code coverage results
+    - name: Archive code results
       uses: actions/upload-artifact@v2
       with:
-        name: code-coverage-report
-        path: coverage/
+        name: report
+        path: result/
 
     - name: Run clang-format style check
       uses: DoozyX/clang-format-lint-action@v0.12

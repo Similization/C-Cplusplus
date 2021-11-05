@@ -1,7 +1,8 @@
+#include <getopt.h>
+#include <malloc.h>
+
 #include "file.h"
-#include "getopt.h"
 #include "interface.h"
-#include "malloc.h"
 
 #define MAX_ARRAY_SIZE 100000000
 
@@ -22,7 +23,9 @@ int main(int argc, char* argv[]) {
         break;
       case 'c':
         err = create_and_init(optarg, MAX_ARRAY_SIZE);
-        return 0;
+        if (err == 0) {
+          return 0;
+        }
         break;
       case '?':
         printf("Unknown option: %c\n", optopt);

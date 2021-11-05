@@ -1,5 +1,4 @@
 .vscode/
 build/
-create_double.c
 file.txt
 .clang-format
