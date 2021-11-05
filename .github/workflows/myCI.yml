@@ -38,10 +38,7 @@ jobs:
     - name: Run consist
       run: cd build_c && ./main -c ../files/file_1.txt && ./main -i ../files/file_1.txt > ../result/consist_results.txt
 
-    - name: Run Valgrind for consist
-      run: cd build_c && valgrind --error-exitcode=1 ./main
-
-    - name: Run Valgrind for tests
+    - name: Run Valgrind
       run: cd build_c && valgrind --error-exitcode=1 ./consist_test && valgrind --error-exitcode=1 ./parallel_test && valgrind --error-exitcode=1 ./file_lib_test
 
     - name: Tests
@@ -69,9 +66,6 @@ jobs:
 
     - name: Run parallel
       run: cd build_p && ./main -c ../files/file_2.txt && ./main -i ../files/file_2.txt > ../result/parallel_results.txt
-
-    - name: Run Valgrind for parallel
-      run: cd build_p && valgrind --error-exitcode=1 ./main
 
     - name: Archive code results
       uses: actions/upload-artifact@v2
