@@ -1,3 +1,4 @@
+#include "foo.c"
 #include "interface.h"
 
 formula_data get_formula_datas(double* array, long long a_size) {

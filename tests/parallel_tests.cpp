@@ -22,6 +22,9 @@ TEST(sum_formula_datas, not_null_args) {
   t_info.data = &data;
   t_info.thread_num = 0;
 
+  pthread_mutex_init(&mutex, NULL);  // create mutex
   EXPECT_EQ(1, (sum_formula_datas((void*)&t_info) != NULL));
+  pthread_mutex_destroy(&mutex);  // destroy mutex
+
   delete[] array;
 }

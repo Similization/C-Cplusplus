@@ -18,20 +18,18 @@ target_include_directories(_file PUBLIC ${PROJECT_SOURCE_DIR}/file_lib/)
 
 target_link_libraries(main _file)
 
-add_library(_consist SHARED library/consist.c)
+add_library(_consist STATIC library/consist.c)
 target_include_directories(_consist PUBLIC ${PROJECT_SOURCE_DIR}/library/)
 
-add_library(_parallel STATIC library/parallel.c)
+add_library(_parallel SHARED library/parallel.c)
 target_include_directories(_parallel PUBLIC ${PROJECT_SOURCE_DIR}/library/)
 
 if(USE_STATIC)
     target_link_libraries(main _consist)
 else()
     target_link_libraries(main _parallel) 
-
 endif()
 
-#add_executable(cd create_double.c)
 # gtest
 include(FetchContent)
 FetchContent_Declare(
@@ -43,13 +41,11 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-
-
 add_executable(consist_test tests/main_test.cpp tests/consist_tests.cpp)
 target_include_directories(consist_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library)
 target_link_libraries(consist_test gtest_main _consist)
 
-add_executable(parallel_test ${consist_lib_test} tests/parallel_tests.cpp)
+add_executable(parallel_test tests/main_test.cpp tests/consist_tests.cpp tests/parallel_tests.cpp)
 target_include_directories(parallel_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library)
 target_link_libraries(parallel_test gtest_main _parallel)
 

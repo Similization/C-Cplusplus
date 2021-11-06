@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#include "foo.c"
 #include "interface.h"
 
 pthread_mutex_t mutex;
