@@ -19,8 +19,8 @@ void* sum_formula_datas(void* args) {
   }
 
   thread_info cur_thread = *((thread_info*)args);
-  size_t threads_count =
-      sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
+  size_t threads_count = 8;
+      //sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
   printf("Threads count in sum: %lu\n", threads_count);
   formula_data cur_data;
   int elemts_between = threads_count * 2, err = 0;
@@ -65,8 +65,8 @@ formula_data get_formula_datas(double* array, long long a_size) {
     return error_data;
   }
 
-  size_t threads_max_count =
-      sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
+  size_t threads_max_count = 8;
+      //sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
   printf("Threads count in gfd: %lu\n", threads_max_count);
   pthread_t threads[threads_max_count];   /* array of threads */
   thread_info f_datas[threads_max_count]; /* array of threads information */
