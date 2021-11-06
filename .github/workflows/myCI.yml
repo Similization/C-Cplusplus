@@ -45,15 +45,7 @@ jobs:
       run: |
           cd build_c
           ./consist_test
-          cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_consist.html
-          
-          cd build_c
           ./parallel_test
-          cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_parallel.html
-          
-          cd build_c
           ./file_lib_test
           cd ..
           gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_file.html
