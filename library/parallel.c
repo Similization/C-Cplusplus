@@ -34,6 +34,7 @@ void* sum_formula_datas(void* args) {
     cur_data.sum_x2 += cur_thread.array[i] * cur_thread.array[i];
     cur_data.sum_xy += cur_thread.array[i] * cur_thread.array[i + 1];
     i += elemts_between;
+    printf("%d", i);
   }
 
   if ((err = pthread_mutex_lock(&mutex)) != 0) {
