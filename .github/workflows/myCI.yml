@@ -46,17 +46,17 @@ jobs:
           cd build_c
           ./consist_test
           cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_consist.html
+          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_consist.html
           
           cd build_c
           ./parallel_test
           cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_parallel.html
+          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_parallel.html
           
           cd build_c
           ./file_lib_test
           cd ..
-          gcovr -r . --exclude build_c/ --exclude main.c --html --html-details -o result/coverage/coverage_file.html
+          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_file.html
 
     - name: Make parallel
       run: mkdir build_p && cd build_p && cmake .. -DUSE_STATIC=OFF && make
