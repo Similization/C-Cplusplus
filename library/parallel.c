@@ -23,7 +23,6 @@ void* sum_formula_datas(void* args) {
       sysconf(_SC_NPROCESSORS_ONLN); /* get count of threads */
   formula_data cur_data;
   int elemts_between = threads_count * 2, err = 0;
-  printf("%d\n", elemts_between);
   if ((err = fdata_initialize(&cur_data)) != 0) {
     return NULL;
   }
@@ -34,7 +33,6 @@ void* sum_formula_datas(void* args) {
     cur_data.sum_x2 += cur_thread.array[i] * cur_thread.array[i];
     cur_data.sum_xy += cur_thread.array[i] * cur_thread.array[i + 1];
     i += elemts_between;
-    printf("%lld", i);
   }
 
   if ((err = pthread_mutex_lock(&mutex)) != 0) {
