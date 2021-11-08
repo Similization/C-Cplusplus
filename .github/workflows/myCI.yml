@@ -1,0 +1,75 @@
+name: 'All tests'
+on: [pull_request, push]
+
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install valgrind
+      run: sudo apt install valgrind
+
+    - name: Install googletest
+      run: sudo apt-get install libgtest-dev
+
+    - name: Install gcovr
+      run: sudo apt install gcovr
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck -y
+
+    - name: Make result and file directories
+      run: mkdir -p result/coverage && mkdir files
+
+    - name: Run cppcheck
+      run: cppcheck --enable=all --suppress=missingIncludeSystem --language=c *.c
+
+    - name: Make consist
+      run: mkdir build_c && cd build_c && cmake .. && make
+
+    - name: Create result txt for consist
+      run: cd result && touch consist_results.txt
+
+    - name: Run consist
+      run: cd build_c && ./main -c ../files/file_1.txt && ./main -i ../files/file_1.txt > ../result/consist_results.txt
+
+    - name: Run Valgrind
+      run: cd build_c && valgrind --error-exitcode=1 ./consist_test && valgrind --error-exitcode=1 ./parallel_test && valgrind --error-exitcode=1 ./file_lib_test
+
+    - name: Tests
+      run: |
+          cd build_c
+          ./consist_test
+          ./parallel_test
+          ./file_lib_test
+          cd ..
+          gcovr -r . --exclude build_c/ --exclude main.c --exclude tests/ --html --html-details -o result/coverage/coverage_file.html
+
+    - name: Make parallel
+      run: mkdir build_p && cd build_p && cmake .. -DUSE_STATIC=OFF && make
+
+    - name: Create result txt for parallel
+      run: cd result && touch parallel_results.txt 
+
+    - name: Run parallel
+      run: cd build_p && ./main -c ../files/file_2.txt && ./main -i ../files/file_2.txt > ../result/parallel_results.txt
+
+    - name: Archive code results
+      uses: actions/upload-artifact@v2
+      with:
+        name: report
+        path: result/
+
+    - name: Run clang-format style check
+      uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: '.'
+        exclude: './build_c ./build_p ./github ./vscode ./CMakeModules ./idea'
+        extensions: 'h,cpp,c'
+        clangFormatVersion: 12
+        style: google
