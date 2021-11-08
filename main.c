@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
   printf("The equation of the form: y = a*x + b\n");
   printf("Will be: y = %LF*x + %LF\n", coeff_a, coeff_b);
   printf("Where: a = %LF,  b = %LF\n", coeff_a, coeff_b);
-  printf("Runtime: %u\n",
+  printf("Runtime: %f\n",
          end_time.tv_sec - start_time.tv_sec +
              (end_time.tv_nsec - start_time.tv_nsec) / 1000000000.0);
 
