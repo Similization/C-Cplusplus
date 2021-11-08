@@ -44,11 +44,18 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  struct timespec start_time, end_time;
   /* time start */
-  unsigned int start_time = clock();
+  if (clock_gettime(CLOCK_REALTIME, &start_time) == -1) {
+    printf("Clock error: can't recieve time\n");
+    return 1;
+  }
   formula_data res = get_formula_datas(array, MAX_ARRAY_SIZE);
-  unsigned int end_time = clock();
   /* time end */
+  if (clock_gettime(CLOCK_REALTIME, &end_time) == -1) {
+    printf("Clock error: can't recieve time\n");
+    return 1;
+  }
 
   if (res.sum_x == 0 && res.sum_y == 0 && res.sum_xy == 0 && res.sum_x2 == 0) {
     printf("Wrong data\n");
@@ -69,7 +76,9 @@ int main(int argc, char* argv[]) {
   printf("The equation of the form: y = a*x + b\n");
   printf("Will be: y = %LF*x + %LF\n", coeff_a, coeff_b);
   printf("Where: a = %LF,  b = %LF\n", coeff_a, coeff_b);
-  printf("Runtime: %u\n", end_time - start_time);
+  printf("Runtime: %u\n",
+         end_time.tv_sec - start_time.tv_sec +
+             (end_time.tv_nsec - start_time.tv_nsec) / 1000000000.0);
 
   return 0;
 }
